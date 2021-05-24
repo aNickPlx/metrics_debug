@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    istio-injection: disabled
+  name: metrics-debug
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: metrics-debug
+    version: v1
+  name: metrics-debug
+  namespace: metrics-debug
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: metrics-debug
+      version: v1
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+      labels:
+        app: metrics-debug
+        version: v1
+    spec:
+      containers:
+        - image: <image>
+          imagePullPolicy: Always
+          name: metrics-debug
+          ports:
+            - containerPort: 8080
